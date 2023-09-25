@@ -1,19 +1,14 @@
-# This is a sample Python script.
+naam_reiziger = input("Put your name in?:")
 
-# Press Shift+F10 to execute it or replace it with your code.
-# Press Double Shift to search everywhere for classes, files, tool windows, actions, and settings.
+if naam_reiziger =='':
+    print("Anoniem")
 
+message_gebruiker = input("What is your message?:")
 
-def print_hi(name):
-    # Use a breakpoint in the code line below to debug your script.
-    print(f'Hi, {name}')  # Press Ctrl+F8 to toggle the breakpoint.
-
-
-# Press the green button in the gutter to run the script.
-if __name__ == '__main__':
-    print_hi('PyCharm')
-
-# See PyCharm help at https://www.jetbrains.com/help/pycharm/
-print('Hello world')
-
-print('dit is een belangrijke code')
+if len(message_gebruiker) > 140:
+    print("Error")
+else:
+    mijn_bestand = open("message.txt", 'a')
+    mijn_bestand.write(naam_reiziger + ' ' + message_gebruiker)
+    mijn_bestand.write("\n")
+    mijn_bestand.close()
