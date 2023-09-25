@@ -1,9 +1,12 @@
+import datetime
 naam_reiziger = input("Put your name in?:")
 
 if naam_reiziger =='':
     print("Anoniem")
 
 message_gebruiker = input("What is your message?:")
+
+datum_tijd = time.strftime("%d, %m, %Y %X")
 
 if len(message_gebruiker) > 140:
     print("Error")
