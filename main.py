@@ -1,17 +1,23 @@
-import datetime
-naam_reiziger = input("Put your name in?:")
+import csv
+import random
+from datetime import datetime
 
-if naam_reiziger =='':
-    print("Anoniem")
+stations = ['Utrecht', 'Arnhem', 'Almere', 'Amersfoort', 'Breda', 'Amsterdam', 'Den Haag', 'Gouda', 'Rotterdam', 'Hilversum']
 
-message_gebruiker = input("What is your message?:")
+naam = input("Voer uw naam in (laat leeg voor anoniem): ")
+bericht = input("Voer uw bericht in (maximaal 140 karakters): ")
 
-datum_tijd = time.strftime("%d, %m, %Y %X")
-
-if len(message_gebruiker) > 140:
-    print("Error")
+if len(bericht) > 140:
+    print("Het bericht mag maximaal 140 karakters bevatten.")
 else:
-    mijn_bestand = open("message.txt", 'a')
-    mijn_bestand.write(naam_reiziger + ' ' + message_gebruiker)
-    mijn_bestand.write("\n")
-    mijn_bestand.close()
+    station = random.choice(stations)
+    datum_tijd = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+    if not naam:
+        naam = "anoniem"
+
+    with open("feedback.csv", mode='a', newline='') as file:
+        writer = csv.writer(file)
+        writer.writerow([bericht, datum_tijd, naam, station, "Nog niet gemodereerd"])
+
+
+
