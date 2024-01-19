@@ -1,38 +1,40 @@
-import psycopg2
-import csv
+import psycopg2  # Importeer de psycopg2-module voor het werken met PostgreSQL
+import csv # Importeer de CSV-module om met CSV-bestanden te werken
 from datetime import datetime
 
-# Verbinding maken met de database
+# Dit is voor verbinding maken met de database
 conn = psycopg2.connect(
-    dbname="postgres",
+    host="40.113.123.172",
+    database="stationszuil",
     user="postgres",
-    password="Emirhanakin2006!",
-    host="localhost"
+    password="postgres",
+    port="5432"
 )
 cursor = conn.cursor()
 
-scheldwoorden = ["kanker", "fuck", "shit", "kaolo", "kut", "tering", "tyfus"]
+scheldwoorden = ["kanker", "fuck", "shit", "kaolo", "kut", "tering", "tyfus"] # Lijst van de scheldwoorden
 
-# Verwerk feedback uit het CSV-bestand
+# Hier word de feedback verwerkt uit het CSV-bestand
 with open("feedback.csv", newline='') as file:
     reader = csv.reader(file)
     for row in reader:
-        if len(row) == 5:  # 5 waarden beschikbaar zijn om uit te pakken
+        if len(row) == 5:  # Controleert of er 5 rijen zijn
             bericht, datum_tijd, naam, station, status = row
 
             print(f"Verwerken: {bericht}, {datum_tijd}, {naam}, {station}, {status}")
 
             if status == "Nog niet gemodereerd":
                 goedgekeurd = "ja"  # Standaard goedkeuren
-                for scheldwoord in scheldwoorden:
-                    if scheldwoord in bericht:
-                        goedgekeurd = "nee"  # Als een scheldwoord wordt gevonden, afkeuren
+                for scheldwoord in scheldwoorden:   # Hier wordt een lus gestart om door elk scheldwoord in de lijst scheldwoorden te itereren.
+                    if scheldwoord in bericht:      # Controleert of het huidige scheldwoord aanwezig is in het bericht.
+                        goedgekeurd = "nee"         # Als een scheldwoord wordt gevonden, afkeuren
 
-                print(f"Goedkeuren: {goedgekeurd}")
+                print(f"Goedkeuren: {goedgekeurd}") # Status van bericht
 
-                cursor.execute("INSERT INTO reiziger (naam, datum, station, bericht) VALUES (%s, %s, %s, %s)",
-                               (naam, datum_tijd, station, bericht))
-                conn.commit()
+                if goedgekeurd == "ja": # Code is goedgekeurd
+                    cursor.execute("INSERT INTO reiziger (naam, datum, station, bericht) VALUES (%s, %s, %s, %s)",
+                                   (naam, datum_tijd, station, bericht))
+                    conn.commit()
 
                 datum_tijd_moderatie = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
                 emailadres = input("Voer het e-mailadres van de moderator in: ")
@@ -41,12 +43,8 @@ with open("feedback.csv", newline='') as file:
 
                 print(f"Moderator: {emailadres}, {naam}, Goedkeuring: {goedkeuring}")
 
-                cursor.execute(
-                    "INSERT INTO moderator_beoordeling (datum_tijd, goedkeuring) VALUES (%s, %s)",
-                    (datum_tijd_moderatie, goedkeuring))
-                conn.commit()
-
-                row[4] = "Goedgekeurd" if goedkeuring else "Afgekeurd"
+                if 'goedkeuring' in locals(): # Controle of de variable goedkeuring bestaat
+                    row[4] = "Goedgekeurd" if goedkeuring else "Afgekeurd" # Als goedkeuring waar is, wordt goedgekeurd toegewezen aan row[4].
 
 # Sluit de databaseverbinding
 cursor.close()
