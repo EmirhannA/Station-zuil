@@ -6,7 +6,7 @@ from tkinter import Tk, Label, Button, Toplevel, StringVar
 
 
 # Mijn api id
-appid = "41b4cded1ecf20968aa176a6963a4f6b"
+appid = "apikey"
 
 # Alle API-URL's voor Utrecht, Rotterdam en Arnhem
 urlUtrecht = f'http://api.openweathermap.org/data/2.5/weather?q=Utrecht,nl&APPID={appid}&units=metric'
